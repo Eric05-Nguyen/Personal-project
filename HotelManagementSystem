@@ -1,0 +1,11 @@
+package hotelManagement;
+import javax.swing.*;
+
+public class HotelManagementSystem {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            HotelOperations hotel = new Hotel();
+            new MainGUI(hotel);
+        });
+    }
+}
