@@ -2,13 +2,13 @@ package hotelManagement;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
 
 public class RoomInfoFrame extends JFrame {
 
     public RoomInfoFrame(HotelOperations hotel) {
         setTitle("Danh sách phòng - Thông tin chi tiết");
-        setSize(600, 400);
+        setSize(700, 400);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -18,18 +18,20 @@ public class RoomInfoFrame extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
 
         ArrayList<Room> rooms = hotel.getAllRooms();
-        textArea.append("Số phòng | Loại | Giá/ngày | Trạng thái | Khách hàng | Nhận phòng | Trả phòng\n");
-        textArea.append("-------------------------------------------------------------------------------------\n");
+        textArea.append("Số phòng | Loại | Giá/ngày | Trạng thái | Khách hàng | SĐT | Email | Nhận phòng | Trả phòng\n");
+        textArea.append("-----------------------------------------------------------------------------------------------------------\n");
 
         for (Room room : rooms) {
             String status = room.isIsBooked() ? "Đã đặt" : "Trống";
             String customerName = (room.getBookedBy() != null) ? room.getBookedBy().getName() : "N/A";
+            String phone = (room.getBookedBy() != null) ? room.getBookedBy().getPhone() : "N/A";
+            String email = (room.getBookedBy() != null) ? room.getBookedBy().getEmail() : "N/A";
             String checkIn = room.getCheckInDate().isEmpty() ? "N/A" : room.getCheckInDate();
             String checkOut = room.getCheckOutDate().isEmpty() ? "N/A" : room.getCheckOutDate();
 
-            textArea.append(String.format("%-8d | %-10s | %-8.2f | %-8s | %-15s | %-10s | %-10s\n",
+            textArea.append(String.format("%-8d | %-10s | %-10.2f | %-8s | %-15s | %-12s | %-20s | %-10s | %-10s\n",
                     room.getRoomNumber(), room.getRoomType(), room.getPricePerDay(),
-                    status, customerName, checkIn, checkOut));
+                    status, customerName, phone, email, checkIn, checkOut));
         }
 
         setVisible(true);
