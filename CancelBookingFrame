@@ -1,0 +1,41 @@
+package hotelManagement;
+
+import java.util.*;
+import java.awt.*;
+import javax.swing.*;
+
+public class CancelBookingFrame extends JFrame {
+
+    public CancelBookingFrame(HotelOperations hotel) {
+
+        setTitle("Hủy đặt phòng");
+        setSize(300, 200);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel panel = new JPanel();
+        JTextField roomField = new JTextField(10);
+        JButton cancelButton = new JButton("Hủy phòng");
+
+        panel.add(new JLabel("Nhập số phòng:"));
+        panel.add(roomField);
+        panel.add(cancelButton);
+        add(panel);
+
+        cancelButton.addActionListener(e -> {
+            try {
+                int roomNumber = Integer.parseInt(roomField.getText());
+                if (hotel.cancelBooking(roomNumber)) {
+                    JOptionPane.showMessageDialog(this, "Hủy phòng thành công!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Phòng chưa được đặt hoặc không tồn tại.");
+                }
+                dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Số phòng phải là số nguyên.");
+            }
+        });
+
+        setVisible(true);
+    }
+}
