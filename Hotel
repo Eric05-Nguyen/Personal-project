@@ -1,0 +1,84 @@
+package hotelManagement;
+
+import java.util.*;
+
+public class Hotel implements HotelOperations {
+
+    private ArrayList<Room> rooms = new ArrayList<>();
+    private ArrayList<Customer> customers = new ArrayList<>();
+
+    @Override
+    public void addRoom(Room room) {
+        rooms.add(room);
+    }
+
+    @Override
+    public ArrayList<Room> getAllRooms() {
+        return rooms;
+    }
+
+    @Override
+    public Room checkRoomAvailability(int roomNumber) {
+        for (Room room : rooms) {
+            if (room.getRoomNumber() == roomNumber) {
+                return room;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean bookRoom(int roomNumber, Customer customer, String checkInDate, String checkOutDate) {
+
+        Room room = checkRoomAvailability(roomNumber);
+        if (room != null && !room.isIsBooked()) {
+            room.bookRoom(customer, checkInDate, checkOutDate);
+            customers.add(customer);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean cancelBooking(int roomNumber) {
+        Room room = checkRoomAvailability(roomNumber);
+        if (room != null && room.isIsBooked()) {
+            room.cancelBooking();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean processPayment(int roomNumber, double amountPaid) {
+        Room room = checkRoomAvailability(roomNumber);
+        if (room != null && room.isIsBooked()) {
+            System.out.println("Thanh toán thành công " + amountPaid + " cho phòng " + roomNumber);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void addCustomer(Customer customer) {
+        customers.add(customer);
+    }
+
+    @Override
+    public ArrayList<Customer> getAllCustomers() {
+        return customers;
+    }
+
+    @Override
+    public double calculateTotalRevenue() {
+        double total = 0;
+        for (Room room : rooms) {
+            if (room.isIsBooked()) {
+                total += room.getPricePerDay();
+            }
+        }
+        return total;
+
+    }
+
+}
