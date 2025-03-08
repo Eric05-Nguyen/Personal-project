@@ -1,0 +1,38 @@
+package hotelManagement;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class MainGUI extends JFrame {
+
+    private HotelOperations hotel;
+
+    public MainGUI(HotelOperations hotel) {
+        this.hotel = hotel;
+        setTitle("Hotel Management System");
+        setSize(500, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new GridLayout(4, 2, 10, 10));
+        JButton bookRoomButton = new JButton("Đặt phòng");
+        JButton checkRoomButton = new JButton("Kiểm tra phòng");
+        JButton addRoomButton = new JButton("Thêm phòng");
+        JButton roomInfoButton = new JButton("Xem thông tin phòng");
+        JButton cancelBookingButton = new JButton("Hủy đặt phòng");
+        JButton paymentButton = new JButton("Thanh toán");
+        bookRoomButton.addActionListener(e -> new BookRoomFrame(hotel));
+        checkRoomButton.addActionListener(e -> new CheckRoomFrame(hotel));
+        addRoomButton.addActionListener(e -> new AddRoomFrame(hotel));
+        roomInfoButton.addActionListener(e -> new RoomInfoFrame(hotel));
+        cancelBookingButton.addActionListener(e -> new CancelBookingFrame(hotel));
+        paymentButton.addActionListener(e -> new PaymentFrame(hotel));
+        add(bookRoomButton);
+        add(checkRoomButton);
+        add(addRoomButton);
+        add(roomInfoButton);
+        add(cancelBookingButton);
+        add(paymentButton);
+        setVisible(true);
+    }
+
+}
