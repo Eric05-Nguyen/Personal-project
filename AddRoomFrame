@@ -1,0 +1,39 @@
+package hotelManagement;
+
+import javax.swing.*;
+
+public class AddRoomFrame extends JFrame {
+    public AddRoomFrame(HotelOperations hotel) {
+        setTitle("Thêm phòng mới");
+        setSize(400, 250);
+        setLocation(200, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JPanel panel = new JPanel();
+        JTextField roomNumberField = new JTextField(10);
+        JTextField roomTypeField = new JTextField(15);
+        JTextField priceField = new JTextField(10);
+        JButton addButton = new JButton("Thêm phòng");
+        panel.add(new JLabel("Số phòng:"));
+        panel.add(roomNumberField);
+        panel.add(new JLabel("Loại phòng:"));
+        panel.add(roomTypeField);
+        panel.add(new JLabel("Giá phòng/ngày:"));
+        panel.add(priceField);
+        panel.add(addButton);
+        add(panel);
+        addButton.addActionListener(e -> {
+            try {
+                int roomNumber = Integer.parseInt(roomNumberField.getText());
+                String roomType = roomTypeField.getText();
+                double price = Double.parseDouble(priceField.getText());
+                Room newRoom = new Room(roomNumber, roomType, price);
+                hotel.addRoom(newRoom);
+                JOptionPane.showMessageDialog(this, "Thêm phòng thành công!");
+                dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Số phòng và giá phải là số.");
+            }
+        });
+        setVisible(true);
+    }
+}
