@@ -1,0 +1,69 @@
+package hotelManagement;
+
+import javax.swing.*;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+
+public class BookRoomFrame extends JFrame {
+    public BookRoomFrame(HotelOperations hotel) {
+        setTitle("Đặt phòng khách sạn");
+        setSize(400, 350);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        JTextField roomNumberField = new JTextField(10);
+        JTextField nameField = new JTextField(20);
+        JTextField phoneField = new JTextField(15);
+        JTextField emailField = new JTextField(20);
+        JTextField checkInField = new JTextField(10);
+        JTextField checkOutField = new JTextField(10);
+        JButton bookButton = new JButton("Xác nhận đặt phòng");
+        panel.add(new JLabel("Số phòng:"));
+        panel.add(roomNumberField);
+        panel.add(new JLabel("Tên khách hàng:"));
+        panel.add(nameField);
+        panel.add(new JLabel("Số điện thoại:"));
+        panel.add(phoneField);
+        panel.add(new JLabel("Email:"));
+        panel.add(emailField);
+        panel.add(new JLabel("Ngày nhận phòng (d/M/yyyy):"));
+        panel.add(checkInField);
+        panel.add(new JLabel("Ngày trả phòng (d/M/yyyy):"));
+        panel.add(checkOutField);
+        panel.add(bookButton);
+        add(panel);
+        setVisible(true);
+        bookButton.addActionListener(e -> {
+            try {
+                int roomNumber = Integer.parseInt(roomNumberField.getText());
+                String name = nameField.getText();
+                String phone = phoneField.getText();
+                String email = emailField.getText();
+                String checkIn = checkInField.getText();
+                String checkOut = checkOutField.getText();
+                if (!name.isEmpty() && !phone.isEmpty() && !email.isEmpty() && !checkIn.isEmpty() && !checkOut.isEmpty()) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+                    LocalDate checkInDate = LocalDate.parse(checkIn, formatter);
+                    LocalDate checkOutDate = LocalDate.parse(checkOut, formatter);
+                    if (!checkOutDate.isAfter(checkInDate)) {
+                        JOptionPane.showMessageDialog(this, "Ngày trả phải sau ngày nhận!");
+                        return;
+                    }
+                    Customer customer = new Customer(0, name, phone, email);
+                    boolean success = hotel.bookRoom(roomNumber, customer, checkIn, checkOut);
+                    if (success) {
+                        JOptionPane.showMessageDialog(this, "Đặt phòng thành công cho " + name + " tại phòng " + roomNumber);
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Phòng đã được đặt hoặc không tồn tại.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin.");
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Lỗi nhập liệu! Kiểm tra lại thông tin.");
+            }
+        });
+    }
+}
