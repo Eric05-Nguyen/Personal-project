@@ -1,0 +1,108 @@
+package hotelManagement;
+
+public class Room {
+
+    private int roomNumber;
+    private String roomType;
+    private double pricePerDay;
+    private boolean isBooked;
+    private String checkInDate, checkOutDate;
+    private Customer bookedBy;
+
+    public Room(int roomNumber, String roomType, double pricePerDay) {
+        this.roomNumber = roomNumber;
+        this.roomType = roomType;
+        this.pricePerDay = pricePerDay;
+        this.isBooked = false;
+        this.checkInDate = "";
+        this.checkOutDate = "";
+        this.bookedBy = null;
+    }
+
+    public Room(int roomNumber, String roomType, double pricePerDay, boolean isBooked,
+            String checkInDate, String checkOutDate, Customer bookedBy) {
+        this.roomNumber = roomNumber;
+        this.roomType = roomType;
+        this.pricePerDay = pricePerDay;
+        this.isBooked = isBooked;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.bookedBy = bookedBy;
+    }
+
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
+    public void setRoomNumber(int roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
+    public double getPricePerDay() {
+        return pricePerDay;
+    }
+
+    public void setPricePerDay(double pricePerDay) {
+        this.pricePerDay = pricePerDay;
+    }
+
+    public boolean isIsBooked() {
+        return isBooked;
+    }
+
+    public void setIsBooked(boolean isBooked) {
+        this.isBooked = isBooked;
+    }
+
+    public String getCheckInDate() {
+        return checkInDate;
+    }
+
+    public void setCheckInDate(String checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public String getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    public void setCheckOutDate(String checkOutDate) {
+        this.checkOutDate = checkOutDate;
+    }
+
+    public Customer getBookedBy() {
+        return bookedBy;
+    }
+
+    public void setBookedBy(Customer bookedBy) {
+        this.bookedBy = bookedBy;
+    }
+
+    public void cancelBooking() {
+        this.isBooked = false;
+        this.bookedBy = null;
+        this.checkInDate = "";
+        this.checkOutDate = "";
+    }
+
+    public String toString() {
+        return "Room " + roomNumber + " (" + roomType + ") - "
+                + (isBooked ? "Booked by " + bookedBy.getName() : "Available");
+    }
+
+    public void bookRoom(Customer customer, String checkInDate, String checkOutDate) {
+        this.isBooked = true;
+        this.bookedBy = customer;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+    }
+
+}
