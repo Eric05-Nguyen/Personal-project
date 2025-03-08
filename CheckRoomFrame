@@ -1,0 +1,41 @@
+package hotelManagement;
+
+import javax.swing.*;
+
+public class CheckRoomFrame extends JFrame {
+
+    public CheckRoomFrame(HotelOperations hotel) {
+        setTitle("Kiểm tra phòng");
+        setSize(300, 200);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JPanel panel = new JPanel();
+
+        JTextField roomNumberField = new JTextField(10);
+        JButton checkButton = new JButton("Kiểm tra");
+        JLabel resultLabel = new JLabel("");
+
+        panel.add(new JLabel("Nhập số phòng:"));
+        panel.add(roomNumberField);
+        panel.add(checkButton);
+        panel.add(resultLabel);
+        add(panel);
+
+        checkButton.addActionListener(e -> {
+            try {
+                int roomNumber = Integer.parseInt(roomNumberField.getText());
+                Room room = hotel.checkRoomAvailability(roomNumber);
+
+                if (room != null) {
+                    resultLabel.setText(room.isIsBooked() ? "Phòng đã được đặt." : "Phòng trống.");
+                } else {
+                    resultLabel.setText("Phòng không tồn tại.");
+                }
+            } catch (NumberFormatException ex) {
+                resultLabel.setText("Số phòng phải là số nguyên.");
+            }
+        });
+
+        setVisible(true);
+    }
+}
