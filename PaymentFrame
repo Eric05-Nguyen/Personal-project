@@ -1,0 +1,91 @@
+package hotelManagement;
+
+import javax.swing.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+
+public class PaymentFrame extends JFrame {
+
+    private double totalAmount = 0;
+
+    public PaymentFrame(HotelOperations hotel) {
+        setTitle("Thanh toán");
+        setSize(400, 300);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel panel = new JPanel();
+        JTextField roomField = new JTextField(10);
+        JButton calculateButton = new JButton("Tính tiền");
+        JLabel totalLabel = new JLabel("Tổng tiền: --- VND");
+        JTextField amountField = new JTextField(10);
+        JButton payButton = new JButton("Thanh toán");
+        JLabel resultLabel = new JLabel("");
+
+        panel.add(new JLabel("Nhập số phòng:"));
+        panel.add(roomField);
+        panel.add(calculateButton);
+        panel.add(totalLabel);
+        panel.add(new JLabel("Số tiền khách đưa:"));
+        panel.add(amountField);
+        panel.add(payButton);
+        panel.add(resultLabel);
+        add(panel);
+
+        payButton.setEnabled(false);
+        amountField.setEnabled(false);
+
+        calculateButton.addActionListener(e -> {
+            try {
+                int roomNumber = Integer.parseInt(roomField.getText());
+                Room room = hotel.checkRoomAvailability(roomNumber);
+
+                if (room != null && room.isIsBooked()) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+
+                    if (room.getCheckInDate().isEmpty() || room.getCheckOutDate().isEmpty()) {
+                        totalLabel.setText("Lỗi: Ngày nhận hoặc trả phòng không hợp lệ.");
+                        return;
+                    }
+
+                    LocalDate checkInDate = LocalDate.parse(room.getCheckInDate(), formatter);
+                    LocalDate checkOutDate = LocalDate.parse(room.getCheckOutDate(), formatter);
+                    long daysStayed = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+                    totalAmount = daysStayed * room.getPricePerDay();
+
+                    totalLabel.setText("Tổng tiền: " + String.format("%,.0f", totalAmount) + " VND");
+                    amountField.setEnabled(true);
+                    payButton.setEnabled(true);
+                } else {
+                    totalLabel.setText("Lỗi: Phòng chưa được đặt hoặc không tồn tại.");
+                    amountField.setEnabled(false);
+                    payButton.setEnabled(false);
+                }
+            } catch (Exception ex) {
+                totalLabel.setText("Lỗi: Kiểm tra lại số phòng hoặc định dạng ngày tháng.");
+            }
+        });
+
+        payButton.addActionListener(e -> {
+            try {
+                double amountGiven = Double.parseDouble(amountField.getText());
+
+                if (amountGiven < totalAmount) {
+                    JOptionPane.showMessageDialog(this, "Số tiền không đủ! Cần " + String.format("%,.0f", totalAmount) + " VND.");
+                } else {
+                    double change = amountGiven - totalAmount;
+                    int roomNumber = Integer.parseInt(roomField.getText());
+                    hotel.processPayment(roomNumber, totalAmount);
+                    hotel.checkRoomAvailability(roomNumber).cancelBooking();
+                    JOptionPane.showMessageDialog(this, "Thanh toán thành công! Trả lại khách: " + String.format("%,.0f", change) + " VND.");
+                    dispose();
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Lỗi: Số tiền nhập không hợp lệ.");
+            }
+        });
+
+        setVisible(true);
+    }
+}
