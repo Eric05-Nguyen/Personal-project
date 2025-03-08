@@ -1,0 +1,24 @@
+package hotelManagement;
+
+import java.util.*;
+
+public interface HotelOperations {
+
+    void addRoom(Room room);
+
+    ArrayList<Room> getAllRooms();
+
+    Room checkRoomAvailability(int roomNumber);
+
+    boolean bookRoom(int roomNumber, Customer customer, String checkInDate, String checkOutDate);
+
+    boolean cancelBooking(int roomNumber);
+
+    boolean processPayment(int roomNumber, double amountPaid);
+
+    void addCustomer(Customer customer);
+
+    ArrayList<Customer> getAllCustomers();
+
+    double calculateTotalRevenue();
+}
